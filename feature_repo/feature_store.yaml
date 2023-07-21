@@ -1,0 +1,15 @@
+project: credit_scoring_aws
+registry: registry.db
+provider: aws
+online_store:
+    type: redis
+    connection_string: redis-14127.c25932.us-west-2-1.ec2.cloud.rlrcp.com:14127,password=uc2UJcUgxythTO7LnQaQvYP2LTGXhsGL
+offline_store:
+    type: redshift
+    cluster_id: my-feast-project-aws-pendyala-redshift-cluster
+    region: us-west-2
+    user: admin
+    database: dev
+    s3_staging_location: s3://my-feast-project-aws-pendyala-bucket
+    iam_role: arn:aws:iam::735486936198:role/s3_spectrum_role
+entity_key_serialization_version: 2
