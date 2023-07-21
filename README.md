@@ -135,7 +135,9 @@ aws redshift-data execute-statement \
 aws redshift-data get-statement-result --id [SET YOUR STATEMENT ID HERE]
 ```
 
-10. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
+10. Its to deply Redis Enterprise Cloud on AWS, by going to the web application portal: https://app.redislabs.com/#/
+
+11. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
 
 ```
 python3 -m venv redis-aws-feast.venv
@@ -143,14 +145,71 @@ source redis-aws-feast.venv/bin/activate
 ```
 
 
-10. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
+12. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
 
 ```
  pip install 'feast[redis,aws]'
 ```
 
-11. In general we usually setup a feature repository after you install `feast` with `redis` and `aws` dependencies in the previous step. However, in this case, we have already setup a feature repository in [feature_repo/](feature_repo/) folder. So there is no necessity of creating a new feature repository again. So, we will skip running a typical command `feast init -t aws feature_repo` deliberately.
+13. Install a few python dependencies
+```
+pip3 install -r setup/requirements.txt
+```
+
+14. In general we usually setup a feature repository after you install `feast` with `redis` and `aws` dependencies in the previous step. However, in this case, we have already setup a feature repository in [feature_repo/](feature_repo/) folder. So there is no necessity of creating a new feature repository again. So, we will skip running a typical command `feast init -t aws feature_repo` deliberately.
 
 Since we don't need to `init` a new repository, all we have to do is configure the
 [feature_store.yaml/](feature_repo/feature_store.yaml) in the feature repository. Please set the fields under
 `offline_store` to the configuration you have received when deploying your Redshift cluster and S3 bucket.
+
+Edit the `feature_store.yaml` file and replace all the configurations that starts with `<replace-this-with-` with actual values.
+
+```
+cd feature_repo
+vi feature_store.yaml
+```
+
+
+
+15. Deploy the feature store by running `apply` from within the `feature_repo/` folder
+```
+cd feature_repo/
+feast apply
+```
+You would see the following text displayed in the output of the command above.
+```
+Registered entity dob_ssn
+Registered entity zipcode
+Registered feature view credit_history
+Registered feature view zipcode_features
+Deploying infrastructure for credit_history
+Deploying infrastructure for zipcode_features
+```
+
+16. Next we load features into the online store using the `materialize-incremental` command. This command will load the latest feature values from a data source into the online store.
+
+```
+CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S")
+feast materialize-incremental $CURRENT_TIME
+```
+
+17. Training and testing the model.
+Finally, we train the model using a combination of loan data from S3 and our zipcode and credit history features from Redshift (which in turn queries S3), and then we test online inference by reading those same features from online feature store : Redis Enterprise Cloud.
+
+```
+cd codebase
+python run.py
+```
+The script should then output the result of a single loan application
+```
+loan rejected!
+```
+
+18. Finally lest run a web up that demonstrates interactively retrieving the online features from Redis in realtime and makes inferencing against the deployed model. This interactive demo is based on Streamlit application.
+
+Start the Streamlit application, using the following command.
+```
+cd codebase
+streamlit run streamlit_app.py
+```
+Then navigate to the URL on which Streamlit is being served. You should see a user interface through which loan applications can be made.
