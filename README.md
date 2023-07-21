@@ -193,8 +193,8 @@ CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S")
 feast materialize-incremental $CURRENT_TIME
 ```
 
-17. Training and testing the model.
-Finally, we train the model using a combination of loan data from S3 and our zipcode and credit history features from Redshift (which in turn queries S3), and then we test online inference by reading those same features from online feature store : Redis Enterprise Cloud.
+## Training and testing the model.
+We train the model using a combination of loan data from S3 and our zipcode and credit history features from Redshift (which in turn queries S3), and then we test online inference by reading those same features from online feature store : Redis Enterprise Cloud.
 
 ```
 cd codebase
@@ -205,7 +205,8 @@ The script should then output the result of a single loan application
 loan rejected!
 ```
 
-18. Finally lest run a web up that demonstrates interactively retrieving the online features from Redis in realtime and makes inferencing against the deployed model. This interactive demo is based on Streamlit application.
+## Interactive Real-time Web app in action
+Finally lest run a web up that demonstrates interactively retrieving the online features from Redis in realtime and makes inferencing against the deployed model. This interactive demo is based on Streamlit application.
 
 Start the Streamlit application, using the following command.
 ```
