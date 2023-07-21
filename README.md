@@ -135,7 +135,14 @@ aws redshift-data execute-statement \
 aws redshift-data get-statement-result --id [SET YOUR STATEMENT ID HERE]
 ```
 
-10. Its to deply Redis Enterprise Cloud on AWS, by going to the web application portal: https://app.redislabs.com/#/
+10. Its time to deply Redis Enterprise Cloud on AWS, by going to the web application portal: https://app.redislabs.com.
+
+You can choose to deploy a Fixed or Flexible deployment. After you provision a fully managed DBaaS(Database-as-a-Service) from Redis, please take a note of the following database endpoint configurations.
+- Redis Database Server hostname.
+- Redis Database Server Port number.
+- Redis Database Server Default user password.
+
+You will need above details to configure Feast to leverage your Redis Enterprise Cloud on AWS.
 
 11. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
 
