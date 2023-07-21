@@ -151,7 +151,6 @@ python3 -m venv redis-aws-feast.venv
 source redis-aws-feast.venv/bin/activate
 ```
 
-
 12. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
 
 ```
@@ -175,8 +174,6 @@ Edit the `feature_store.yaml` file and replace all the configurations that start
 cd feature_repo
 vi feature_store.yaml
 ```
-
-
 
 15. Deploy the feature store by running `apply` from within the `feature_repo/` folder
 ```
