@@ -171,6 +171,7 @@ gh repo clone spendyaala/aws-redis-feast-featurestore
 2. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
 
 ```
+cd aws-redis-feast-featurestore
 python3 -m venv redis-aws-feast.venv
 source redis-aws-feast.venv/bin/activate
 ```
