@@ -262,3 +262,6 @@ Simply fire up a browser and navigate to the External URL mentioned above.
 If you are running this on an EC2 instance, you may need to setup appropriate security group configurations like this: (Please note these configurations are not meant for Production workloads.)
 
 ![Security Group Config](./setup/security-group-config.png)
+
+If everything goes well, you will see the web application coming up in your browser.
+![Web App](./setup/webapp.png)
