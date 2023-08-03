@@ -243,3 +243,22 @@ cd codebase
 streamlit run streamlit_app.py
 ```
 Then navigate to the URL on which Streamlit is being served. You should see a user interface through which loan applications can be made.
+
+The output may look like this:
+```
+streamlit run streamlit_app.py
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to False.
+
+
+  You can now view your Streamlit app in your browser.
+
+  Network URL: http://172.31.6.9:8501
+  External URL: http://52.36.34.145:8501
+
+```
+
+Simply fire up a browser and navigate to the External URL mentioned above.
+If you are running this on an EC2 instance, you may need to setup appropriate security group configurations like this: (Please note these configurations are not meant for Production workloads.)
+
+![Security Group Config](./setup/security-group-config.png)
