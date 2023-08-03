@@ -68,9 +68,10 @@ aws_secret_access_key = 8PgCIMAnbBOX4JP97TNTX7mOcrUK3D0Xo9Eqnsd$
 region_name           = us-west-2
 ```
 
-4. Now we will setup Offline Feature Store. We will use Amazon Redshift as our offline feature store. We will also use S3 as an object store for housing raw data.
+## Amazon Redshift as your Offline Feature Store
+1. Now we will setup Offline Feature Store. We will use Amazon Redshift as our offline feature store. We will also use S3 as an object store for housing raw data.
 
-5. Let us start with Terraform. We will deploy Redshift, an S3 bucket containing zipcode and credit history parquet files, using Terraform. We will also setup required IAM roles and policies for Redshift to access S3, and create a Redshift table that can query the parquet files.
+2. Let us start with Terraform. We will deploy Redshift, an S3 bucket containing zipcode and credit history parquet files, using Terraform. We will also setup required IAM roles and policies for Redshift to access S3, and create a Redshift table that can query the parquet files.
 
 ```
 cd setup\terraform
@@ -104,7 +105,7 @@ zipcode_features_table = "zipcode_features"
 ```
 Please make a note of these values, as you would use them later.
 
-6. Next we create an external Glue tables in Redshift cluster to point to the external catalog data in S3.
+3. Next we create an external Glue tables in Redshift cluster to point to the external catalog data in S3.
 
 ```
 aws redshift-data execute-statement \
@@ -115,12 +116,12 @@ aws redshift-data execute-statement \
     --sql "create external schema spectrum from data catalog database 'dev' iam_role '${tf_redshift_spectrum_arn}' create external database if not exists;"
 ```
 
-7. Verify if the command was successful or not by running the following command. Please substitute your statement id found from above command.
+4. Verify if the command was successful or not by running the following command. Please substitute your statement id found from above command.
 ```
 aws redshift-data describe-statement --id [SET YOUR STATEMENT ID HERE]
 ```
 
-8. Now you can query the actual zipcode features by running the following command.
+5. Now you can query the actual zipcode features by running the following command.
 ```
 aws redshift-data execute-statement \
     --region "${TF_VAR_region}" \
@@ -130,12 +131,14 @@ aws redshift-data execute-statement \
     --sql "SELECT * from spectrum.zipcode_features LIMIT 1;"
 ```
 
-9. If you would like to print out the results, you can run the following statement.
+6. If you would like to print out the results, you can run the following statement.
 ```
 aws redshift-data get-statement-result --id [SET YOUR STATEMENT ID HERE]
 ```
 
-10. Its time to deply Redis Enterprise Cloud on AWS, by going to the web application portal: https://app.redislabs.com.
+## Setting up Redis Enterprise Cloud
+
+Its time to deply Redis Enterprise Cloud on AWS, by going to the web application portal: https://app.redislabs.com.
 
 You can choose to deploy a Fixed or Flexible deployment. After you provision a fully managed DBaaS(Database-as-a-Service) from Redis, please take a note of the following database endpoint configurations.
 - Redis Database Server hostname.
@@ -151,25 +154,36 @@ Redis Database Server Password: hVxPhlEBp5c6JopAKJCNUIwNoGttSPCF```
 ```
 You will need above details to configure Feast to leverage your Redis Enterprise Cloud on AWS.
 
-11. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
+## Configuring Online Feature Store with Feast and Redis
+1. Lets clone this git repo.
+```
+git clone https://github.com/spendyaala/aws-redis-feast-featurestore.git
+```
+
+OR if you are using the github CLI:
+```
+gh repo clone spendyaala/aws-redis-feast-featurestore
+```
+
+2. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
 
 ```
 python3 -m venv redis-aws-feast.venv
 source redis-aws-feast.venv/bin/activate
 ```
 
-12. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
+3. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
 
 ```
  pip install 'feast[redis,aws]==0.31.1'
 ```
 
-13. Install a few python dependencies
+4. Install a few python dependencies
 ```
 pip3 install -r setup/requirements.txt
 ```
 
-14. In general we usually setup a feature repository after you install `feast` with `redis` and `aws` dependencies in the previous step. However, in this case, we have already setup a feature repository in [feature_repo/](feature_repo/) folder. So there is no necessity of creating a new feature repository again. So, we will skip running a typical command `feast init -t aws feature_repo` deliberately.
+5. In general we usually setup a feature repository after you install `feast` with `redis` and `aws` dependencies in the previous step. However, in this case, we have already setup a feature repository in [feature_repo/](feature_repo/) folder. So there is no necessity of creating a new feature repository again. So, we will skip running a typical command `feast init -t aws feature_repo` deliberately.
 
 Since we don't need to `init` a new repository, all we have to do is configure the
 [feature_store.yaml/](feature_repo/feature_store.yaml) in the feature repository. Please set the fields under
@@ -182,7 +196,7 @@ cd feature_repo
 vi feature_store.yaml
 ```
 
-15. Deploy the feature store by running `apply` from within the `feature_repo/` folder
+6. Deploy the feature store by running `apply` from within the `feature_repo/` folder
 ```
 cd feature_repo/
 feast apply
@@ -197,7 +211,7 @@ Deploying infrastructure for credit_history
 Deploying infrastructure for zipcode_features
 ```
 
-16. Next we load features into the online store using the `materialize-incremental` command. This command will load the latest feature values from a data source into the online store.
+7. Next we load features into the online store using the `materialize-incremental` command. This command will load the latest feature values from a data source into the online store.
 
 ```
 CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S")
