@@ -95,7 +95,7 @@ elif result == 1:
 
 # Feature importance
 st.header("Feature Importance")
-X = pd.read_parquet("data/training_dataset_sample.parquet")
+X = pd.read_parquet("../data/training_dataset_sample.parquet")
 explainer = shap.TreeExplainer(model.classifier)
 shap_values = explainer.shap_values(X)
 left, mid, right = st.columns(3)
