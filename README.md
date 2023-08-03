@@ -44,6 +44,9 @@ terraform -help plan
 ```
 sudo yum install git -y
 ```
+
+If you are big fan of using github CLI, you can install it by following installation instructions for `Amazon Linux` at this [link here](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
+
 ### Python Dev toolkit
 
 ```
