@@ -4,7 +4,7 @@ import pandas as pd
 from credit_model import CreditScoringModel
 
 # Get historic loan data
-loans = pd.read_parquet("data/loan_table.parquet")
+loans = pd.read_parquet("../data/loan_table.parquet")
 
 # Create model
 model = CreditScoringModel()

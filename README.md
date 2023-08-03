@@ -211,7 +211,7 @@ We train the model using a combination of loan data from S3 and our zipcode and 
 cd codebase
 python run.py
 ```
-The script should then output the result of a single loan application
+The script should then output the result of a single loan application. This may take anywhere between 2 to 3 minutes, as the code also trains on the data, before making a prediction.
 ```
 loan rejected!
 ```
