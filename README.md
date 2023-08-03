@@ -142,6 +142,13 @@ You can choose to deploy a Fixed or Flexible deployment. After you provision a f
 - Redis Database Server Port number.
 - Redis Database Server Default user password.
 
+Example settings:
+```
+Redis Database Server hostname: redis-15764.c259.us-east-1-2.ec2.cloud.redislabs.com
+Redis Database Server port#: 15764
+Redis Database Server user: default
+Redis Database Server Password: hVxPhlEBp5c6JopAKJCNUIwNoGttSPCF```
+```
 You will need above details to configure Feast to leverage your Redis Enterprise Cloud on AWS.
 
 11. Lets create a Python virtual environment. We will install all python dependencies within this virtual environment.
