@@ -161,7 +161,7 @@ source redis-aws-feast.venv/bin/activate
 12. Now let us setup Feast. Feast will be our Feature Store and it will leverage Redis Enterprise Cloud as its datastore. We will install feast with AWS and Redis dependencies.
 
 ```
- pip install 'feast[redis,aws]'
+ pip install 'feast[redis,aws]==0.31.1'
 ```
 
 13. Install a few python dependencies
